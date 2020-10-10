@@ -1,0 +1,158 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scenes_and_scripts/ListView/ListView.gd" type="Script" id=1]
+[ext_resource path="res://Scenes_and_scripts/ListView/Entry/Entry.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes_and_scripts/ListView/Export/Export.tscn" type="PackedScene" id=3]
+
+[node name="MarginContainer" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+Entry = ExtResource( 2 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_right = 1004.0
+margin_bottom = 580.0
+custom_constants/separation = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+margin_right = 1004.0
+margin_bottom = 550.0
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+margin_right = 1004.0
+margin_bottom = 550.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+margin_right = 1004.0
+margin_bottom = 24.0
+custom_constants/separation = 10
+
+[node name="Search" type="LineEdit" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_right = 942.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+placeholder_text = "Search"
+
+[node name="ExportButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_left = 952.0
+margin_right = 1004.0
+margin_bottom = 24.0
+hint_tooltip = "Export a plain text list of all the filepaths"
+text = "Export"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+margin_top = 44.0
+margin_right = 1004.0
+margin_bottom = 64.0
+custom_constants/separation = 10
+
+[node name="SortByLabel" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_top = 3.0
+margin_right = 48.0
+margin_bottom = 17.0
+text = "Sort by:"
+
+[node name="SortByOptionButton" type="OptionButton" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 58.0
+margin_right = 87.0
+margin_bottom = 20.0
+
+[node name="OrderOptionButton" type="OptionButton" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 97.0
+margin_right = 126.0
+margin_bottom = 20.0
+
+[node name="SortButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 136.0
+margin_right = 173.0
+margin_bottom = 20.0
+text = "Sort"
+
+[node name="Entries" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+margin_top = 84.0
+margin_right = 1004.0
+margin_bottom = 550.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 560.0
+margin_right = 1004.0
+margin_bottom = 580.0
+size_flags_vertical = 8
+custom_constants/separation = 10
+
+[node name="EditButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_right = 36.0
+margin_bottom = 20.0
+size_flags_horizontal = 0
+text = "Edit"
+
+[node name="ImportButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 46.0
+margin_right = 102.0
+margin_bottom = 20.0
+hint_tooltip = "Export a plain text list of all the filepaths"
+disabled = true
+text = "Import"
+
+[node name="AddButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 112.0
+margin_right = 132.0
+margin_bottom = 20.0
+disabled = true
+text = "+"
+
+[node name="CancelButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 899.0
+margin_right = 953.0
+margin_bottom = 20.0
+size_flags_horizontal = 10
+disabled = true
+text = "Cancel"
+
+[node name="SaveButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 963.0
+margin_right = 1004.0
+margin_bottom = 20.0
+size_flags_horizontal = 8
+disabled = true
+text = "Save"
+
+[node name="Export" parent="." instance=ExtResource( 3 )]
+visible = false
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 1004.0
+margin_bottom = 580.0
+
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+margin_right = 1004.0
+margin_bottom = 580.0
+popup_exclusive = true
+
+[node name="ImportFileDialog" type="FileDialog" parent="."]
+margin_right = 1004.0
+margin_bottom = 580.0
+popup_exclusive = true
+window_title = "Open a File"
+resizable = true
+mode = 0
+access = 2
+current_dir = "/home"
+current_path = "/home/"
