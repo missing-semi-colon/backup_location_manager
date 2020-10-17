@@ -12,6 +12,7 @@ var save_location = "./paths.json"
 var _can_edit = false
 var _old_data = []    # Stores the Entry data from the last save
 var _entry_nodes = []    # Stores the Entry nodes in the order they were added
+onready var _scroll_container = $VBoxContainer/ScrollContainer
 onready var _entry_parent_node = $VBoxContainer/ScrollContainer/VBoxContainer/Entries
 onready var _sort_by_button = $VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2/SortByOptionButton
 onready var _order_button = $VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2/OrderOptionButton
@@ -52,6 +53,9 @@ func _ready() -> void:
 	
 	_old_data = _read_JSON_data()
 	_add_entries(_old_data)
+	# Don't use _scroll_to() here as need the yield() in this method
+	yield(get_tree(), "idle_frame")
+	_scroll_container.set_v_scroll(0)
 
 func enable_edits() -> void:
 	""" Enables the ability to edit entries """
@@ -107,6 +111,7 @@ func add_entry(path: String="", title: String="", notes: String="") -> Node:
 	entry.set_notes_input(notes)
 	entry.set_disabled(not _can_edit)
 	_entry_nodes.append(entry)
+	_scroll_to(_scroll_container.get_v_scrollbar().get_max())
 	return entry
 
 func delete_entry(entry: Node) -> void:
@@ -263,6 +268,11 @@ func _sort(option, ascending=true) -> void:
 			_entry_parent_node.remove_child(child)
 		for i in range(len(nodes)-1, -1, -1):
 			_entry_parent_node.add_child(nodes[i])
+
+func _scroll_to(pos: int) -> void:
+	yield(get_tree(), "idle_frame")
+	_scroll_container.set_v_scroll(
+		_scroll_container.get_v_scrollbar().get_max() )
 
 func _export(filepath: String, values: Array) -> void:
 	""" Export the data as a CSV file """
