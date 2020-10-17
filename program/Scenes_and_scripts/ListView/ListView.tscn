@@ -22,68 +22,73 @@ margin_right = 1004.0
 margin_bottom = 580.0
 custom_constants/separation = 10
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
 margin_right = 1004.0
-margin_bottom = 550.0
-size_flags_vertical = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
-margin_right = 1004.0
-margin_bottom = 550.0
+margin_bottom = 64.0
 size_flags_horizontal = 3
-size_flags_vertical = 3
 custom_constants/separation = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
 margin_right = 1004.0
 margin_bottom = 24.0
 custom_constants/separation = 10
 
-[node name="Search" type="LineEdit" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="Search" type="LineEdit" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_right = 942.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 placeholder_text = "Search"
 
-[node name="ExportButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="ExportButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_left = 952.0
 margin_right = 1004.0
 margin_bottom = 24.0
 hint_tooltip = "Export a plain text list of all the filepaths"
 text = "Export"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
 margin_top = 44.0
 margin_right = 1004.0
 margin_bottom = 64.0
 custom_constants/separation = 10
 
-[node name="SortByLabel" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+[node name="SortByLabel" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_top = 3.0
 margin_right = 48.0
 margin_bottom = 17.0
 text = "Sort by:"
 
-[node name="SortByOptionButton" type="OptionButton" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+[node name="SortByOptionButton" type="OptionButton" parent="VBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_left = 58.0
 margin_right = 87.0
 margin_bottom = 20.0
 
-[node name="OrderOptionButton" type="OptionButton" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+[node name="OrderOptionButton" type="OptionButton" parent="VBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_left = 97.0
 margin_right = 126.0
 margin_bottom = 20.0
 
-[node name="SortButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+[node name="SortButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_left = 136.0
 margin_right = 173.0
 margin_bottom = 20.0
 text = "Sort"
 
-[node name="Entries" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
-margin_top = 84.0
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+margin_top = 74.0
 margin_right = 1004.0
 margin_bottom = 550.0
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+margin_right = 1004.0
+margin_bottom = 476.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Entries" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+margin_right = 1004.0
+margin_bottom = 476.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 20

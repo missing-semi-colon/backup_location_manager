@@ -14,13 +14,13 @@ var _old_data = []    # Stores the Entry data from the last save
 var _entry_nodes = []    # Stores the Entry nodes in the order they were added
 onready var _scroll_container = $VBoxContainer/ScrollContainer
 onready var _entry_parent_node = $VBoxContainer/ScrollContainer/VBoxContainer/Entries
-onready var _sort_by_button = $VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2/SortByOptionButton
-onready var _order_button = $VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2/OrderOptionButton
-onready var _sort_button = $VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2/SortButton
+onready var _sort_by_button = $VBoxContainer/VBoxContainer/HBoxContainer2/SortByOptionButton
+onready var _order_button = $VBoxContainer/VBoxContainer/HBoxContainer2/OrderOptionButton
+onready var _sort_button = $VBoxContainer/VBoxContainer/HBoxContainer2/SortButton
 
 
 func _ready() -> void:
-	var top_level = "VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer/"
+	var top_level = "VBoxContainer/VBoxContainer/HBoxContainer/"
 	get_node(top_level + "Search") \
 		.connect("text_entered", self, "search")
 	get_node(top_level + "ExportButton") \
@@ -270,6 +270,7 @@ func _sort(option, ascending=true) -> void:
 			_entry_parent_node.add_child(nodes[i])
 
 func _scroll_to(pos: int) -> void:
+	""" Scrolls the scroll container to the given position """
 	yield(get_tree(), "idle_frame")
 	_scroll_container.set_v_scroll(
 		_scroll_container.get_v_scrollbar().get_max() )
