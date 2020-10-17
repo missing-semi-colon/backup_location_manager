@@ -80,17 +80,17 @@ margin_right = 208.0
 margin_bottom = 88.0
 
 [node name="DestinationLineEdit" type="LineEdit" parent="CenterContainer/VBoxContainer/PathHBoxContainer"]
-margin_right = 180.0
+margin_right = 123.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 editable = false
 caret_blink = true
 
 [node name="DestinationButton" type="Button" parent="CenterContainer/VBoxContainer/PathHBoxContainer"]
-margin_left = 184.0
+margin_left = 127.0
 margin_right = 208.0
 margin_bottom = 24.0
-text = "[ ]"
+text = "Export to..."
 
 [node name="ExportButton" type="Button" parent="CenterContainer/VBoxContainer"]
 margin_top = 98.0
