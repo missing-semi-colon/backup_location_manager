@@ -1,7 +1,7 @@
 # backup_location_manager
 Save the locations of files you want to backup and export them as a text file.
 
-<img src="https://github.com/missing-semi-colon/backup_location_manager/blob/master/docs/main_view_screen_cap.png" width="600">
+<img src="https://github.com/missing-semi-colon/backup_location_manager/blob/main/docs/main_view_screen_cap.png" width="600">
 
 Can use with a backup program that can read a text file such as this: [backup_from_text_file](https://github.com/missing-semi-colon/backup_from_text_file).
 
