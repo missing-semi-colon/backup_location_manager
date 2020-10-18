@@ -249,8 +249,11 @@ func _sort(option, ascending=true) -> void:
 		for i in range(1, len(_entry_nodes)):
 			for j in range(i):
 				if option == SortBy.Name:
-					if (_entry_parent_node.get_child(i).get_name_input() 
-							< _entry_parent_node.get_child(j).get_name_input() ):
+					var name_i = _entry_parent_node.get_child(i) \
+						.get_name_input().to_lower()
+					var name_j = _entry_parent_node.get_child(j) \
+						.get_name_input().to_lower()
+					if (name_i < name_j ):
 						_entry_parent_node.move_child(
 							_entry_parent_node.get_child(i), j )
 						break
