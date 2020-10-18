@@ -258,8 +258,11 @@ func _sort(option, ascending=true) -> void:
 							_entry_parent_node.get_child(i), j )
 						break
 				elif option == SortBy.Path:
-					if (_entry_parent_node.get_child(i).get_path_input() 
-							< _entry_parent_node.get_child(j).get_path_input() ):
+					var path_i = _entry_parent_node.get_child(i) \
+						.get_path_input().to_lower()
+					var path_j = _entry_parent_node.get_child(j) \
+						.get_path_input().to_lower()
+					if (path_i < path_j ):
 						_entry_parent_node.move_child(
 							_entry_parent_node.get_child(i), j)
 						break
