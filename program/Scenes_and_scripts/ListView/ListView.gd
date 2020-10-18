@@ -294,6 +294,7 @@ func _export(filepath: String, values: Array) -> void:
 		$AcceptDialog.popup_centered(Vector2(200, 100))
 		return
 	
+	# Get the indexes of the values to save
 	var indexes_to_save = []
 	var search_start = 0
 	for _i in range(len(values)):
@@ -318,7 +319,7 @@ func _export(filepath: String, values: Array) -> void:
 			var line = ""
 			for data in entry:
 				line += data + ","
-			line = line.rstrip(",")
+			line = line.trim_suffix(",")
 			data_string += line + "\n"
 		file.store_string(data_string)
 		file.close()
