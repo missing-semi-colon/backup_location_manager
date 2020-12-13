@@ -1,10 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scenes_and_scripts/ListView/ListView.gd" type="Script" id=1]
 [ext_resource path="res://Scenes_and_scripts/ListView/Entry/Entry.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Scenes_and_scripts/ListView/Export/Export.tscn" type="PackedScene" id=3]
 
-[node name="MarginContainer" type="MarginContainer"]
+[node name="ListView" type="MarginContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 10.0
@@ -34,17 +33,10 @@ margin_bottom = 24.0
 custom_constants/separation = 10
 
 [node name="Search" type="LineEdit" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
-margin_right = 942.0
+margin_right = 1004.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 placeholder_text = "Search"
-
-[node name="ExportButton" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
-margin_left = 952.0
-margin_right = 1004.0
-margin_bottom = 24.0
-hint_tooltip = "Export a plain text list of all the filepaths"
-text = "Export"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
 margin_top = 44.0
@@ -137,20 +129,6 @@ size_flags_horizontal = 8
 disabled = true
 text = "Save"
 
-[node name="Export" parent="." instance=ExtResource( 3 )]
-visible = false
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 1004.0
-margin_bottom = 580.0
-
-[node name="AcceptDialog" type="AcceptDialog" parent="."]
-margin_right = 1004.0
-margin_bottom = 580.0
-popup_exclusive = true
-
 [node name="ImportFileDialog" type="FileDialog" parent="."]
 margin_right = 1004.0
 margin_bottom = 580.0
@@ -161,3 +139,6 @@ mode = 0
 access = 2
 current_dir = "/home"
 current_path = "/home/"
+__meta__ = {
+"_editor_description_": ""
+}

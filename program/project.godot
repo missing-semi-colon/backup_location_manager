@@ -8,16 +8,25 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Control",
+"class": "ListView",
+"language": "GDScript",
+"path": "res://Scenes_and_scripts/ListView/ListView.gd"
+} ]
 _global_script_class_icons={
-
+"ListView": ""
 }
 
 [application]
 
 config/name="Backup_GUI"
-run/main_scene="res://Scenes_and_scripts/ListView/ListView.tscn"
+run/main_scene="res://Scenes_and_scripts/Main/Main.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+IO="*res://Scenes_and_scripts/IO/IO.tscn"
 
 [debug]
 

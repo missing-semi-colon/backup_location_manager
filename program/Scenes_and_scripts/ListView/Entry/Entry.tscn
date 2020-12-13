@@ -49,5 +49,6 @@ caret_blink = true
 margin_left = 209.0
 margin_right = 406.0
 margin_bottom = 52.0
+mouse_filter = 1
 size_flags_horizontal = 3
 wrap_enabled = true

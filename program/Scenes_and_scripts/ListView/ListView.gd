@@ -1,4 +1,5 @@
 extends Control
+class_name ListView
 
 export (PackedScene) var Entry
 
@@ -8,7 +9,8 @@ enum SortBy {
 	Path
 }
 
-var save_location = "./paths.json"
+var save_location
+var group_title
 var _can_edit = false
 var _old_data = []    # Stores the Entry data from the last save
 var _entry_nodes = []    # Stores the Entry nodes in the order they were added
@@ -19,12 +21,19 @@ onready var _order_button = $VBoxContainer/VBoxContainer/HBoxContainer2/OrderOpt
 onready var _sort_button = $VBoxContainer/VBoxContainer/HBoxContainer2/SortButton
 
 
+func init(sv_location: String, grp_title: String) -> void:
+	save_location = sv_location
+	group_title = grp_title
+
 func _ready() -> void:
+	for vari in [group_title, save_location]:
+		if vari == null or vari == "":
+			push_error("ListView not initialised with required variables")
+			return
+	
 	var top_level = "VBoxContainer/VBoxContainer/HBoxContainer/"
 	get_node(top_level + "Search") \
 		.connect("text_entered", self, "search")
-	get_node(top_level + "ExportButton") \
-		.connect("pressed", self, "on_ExportButton_pressed")
 	
 	var top_level2 = "VBoxContainer/HBoxContainer/"
 	get_node(top_level2 + "EditButton") \
@@ -37,13 +46,10 @@ func _ready() -> void:
 		.connect("pressed", self, "on_CancelButton_pressed")
 	get_node(top_level2 + "SaveButton") \
 		.connect("pressed", self, "on_SaveButton_pressed")
-	$ImportFileDialog \
-		.connect("file_selected", self, "import_paths_from")
-#	$ExportFileDialog \
-#		.connect("file_selected", self, "export_paths_to")
-	$Export.connect("export_set", self, "on_Export_export_set")
 	
 	_sort_button.connect("pressed", self, "on_SortButton_pressed")
+	$ImportFileDialog \
+		.connect("file_selected", self, "on_ImportFileDialog_file_selected")
 	
 	for option in SortBy:
 		_sort_by_button.add_item(option.to_lower())
@@ -51,8 +57,9 @@ func _ready() -> void:
 	for order in ["ascending", "descending"]:
 		_order_button.add_item(order)
 	
-	_old_data = _read_JSON_data()
-	_add_entries(_old_data)
+	if IO.group_exists(save_location, group_title):
+		_old_data = IO.get_group_data(save_location, group_title)
+		_add_entries(_old_data)
 	# Don't use _scroll_to() here as need the yield() in this method
 	yield(get_tree(), "idle_frame")
 	_scroll_container.set_v_scroll(0)
@@ -66,7 +73,6 @@ func enable_edits() -> void:
 	$VBoxContainer/HBoxContainer/AddButton.set_disabled(false)
 	$VBoxContainer/HBoxContainer/CancelButton.set_disabled(false)
 	$VBoxContainer/HBoxContainer/SaveButton.set_disabled(false)
-#	_old_data = _get_entry_data()
 	_can_edit = true
 
 func disable_edits() -> void:
@@ -102,7 +108,7 @@ func search(text: String) -> void:
 			entry.set_visible(false)
 
 func add_entry(path: String="", title: String="", notes: String="") -> Node:
-	""" Adds an empty entry below the others """
+	""" Adds an entry below the others """
 	var entry = Entry.instance()
 	_entry_parent_node.add_child(entry)
 	entry.close_btn.connect("pressed", self, "delete_entry", [entry])
@@ -111,7 +117,7 @@ func add_entry(path: String="", title: String="", notes: String="") -> Node:
 	entry.set_notes_input(notes)
 	entry.set_disabled(not _can_edit)
 	_entry_nodes.append(entry)
-	_scroll_to(_scroll_container.get_v_scrollbar().get_max())
+	_scroll_to_end()
 	return entry
 
 func delete_entry(entry: Node) -> void:
@@ -122,39 +128,12 @@ func delete_entry(entry: Node) -> void:
 func save_entries() -> void:
 	""" Saves the data in the entry nodes to the JSON file """
 	var data = _get_entry_data()
-	_save(data)
+	IO.save_group_data(save_location, group_title, data)
+	_old_data = data
 
-func import_paths_from(filepath: String) -> void:
-	""" Replaces current entries with the imported ones """
-	var file = _open_file(filepath, File.READ)
-	var content = file.get_as_text()
-	var lines = content.split("\n")
-	var data = []
-	for line in lines:
-		var stripped_line = line.strip_edges()
-		if stripped_line == "":
-			continue
-		data.append([stripped_line, "", ""])
-	_remove_all_entries()
-	_add_entries(data)
-
-func export_paths_to(filepath: String) -> void:
-	""" Save the list of paths as plain text to the passed file location """
-	var dir = filepath.get_base_dir()
-	var file_name = filepath.get_file()
-	if file_name == "":
-		file_name = "filepaths_export.txt"
-	var paths = []
-	for item in _get_entry_data():
-		paths.append(item[0])
-	var file = _open_file(dir + "/" + file_name, File.WRITE)
-	if file != null:
-		var paths_string = ""
-		for path in paths:
-			if path != "":
-				paths_string += path + "\n"
-		file.store_string(paths_string)
-		file.close()
+func is_data_saved():
+	""" Returns false if there is unsaved data """
+	return _old_data == _get_entry_data()
 
 func on_SortButton_pressed() -> void:
 	sort()
@@ -170,13 +149,12 @@ func on_CancelButton_pressed() -> void:
 func on_ImportButton_pressed() -> void:
 	$ImportFileDialog.show()
 
-func on_ExportButton_pressed() -> void:
-	if _old_data != _get_entry_data():
-		push_warning("Some data isn't saved")
-	$Export.show()
-
-func on_Export_export_set(path: String, selected_values: Array) -> void:
-	_export(path, selected_values)
+func on_ImportFileDialog_file_selected(filepath: String) -> void:
+	"""
+	Replaces the data in this group with the data imported from `filepath`
+	"""
+	var data = IO.import_from(filepath)
+	_import_data(data)
 
 func _add_entries(data: Array) -> void:
 	""" Creates entries with the passed data """
@@ -188,21 +166,9 @@ func _remove_all_entries() -> void:
 	for i in range(len(_entry_nodes)-1, -1, -1):
 		delete_entry(_entry_nodes[i])
 
-#func _get_entries() -> Array:
-#	""" Returns the VBoxContainer nodes containing the inputs """
-#	var entries = []
-#	for node in _entry_parent_node.get_children():
-#		if "Entry" in node.get_name():
-#			entries.append(node)
-#	return entries
-
-#func _get_entry(idx: int) -> VBoxContainer:
-#	""" Returns the entry node at position idx """
-#	if idx < _entry_parent_node.get_child_count():
-#		var node = _entry_parent_node.get_child(idx)
-#		if "Entry" in node.get_name():
-#			return node
-#	return null
+func _import_data(data: Array) -> void:
+	_remove_all_entries()
+	_add_entries(data)
 
 func _get_entry_data() -> Array:
 	""" Returns an array containing [path, name, notes] for each entry """
@@ -213,14 +179,6 @@ func _get_entry_data() -> Array:
 		var notes = entry.get_notes_input()
 		data.append([path, title, notes])
 	return data
-
-func _save(data: Array) -> void:
-	""" Saves the passed data to the JSON file """
-	var json_file = _open_file(save_location, File.WRITE)
-	if json_file != null:
-		json_file.store_string(to_json(data))
-		json_file.close()
-	_old_data = data
 
 func _revert_changes() -> void:
 	""" 
@@ -275,99 +233,8 @@ func _sort(option, ascending=true) -> void:
 		for i in range(len(nodes)-1, -1, -1):
 			_entry_parent_node.add_child(nodes[i])
 
-func _scroll_to(pos: int) -> void:
+func _scroll_to_end() -> void:
 	""" Scrolls the scroll container to the given position """
 	yield(get_tree(), "idle_frame")
 	_scroll_container.set_v_scroll(
 		_scroll_container.get_v_scrollbar().get_max() )
-
-func _export(filepath: String, values: Array) -> void:
-	""" Export the data as a CSV file """
-	var dir = Directory.new()
-	var path_dir = filepath.get_base_dir()
-	var file_name = filepath.get_file()
-	
-	var err_msg = ""
-	if not dir.dir_exists(path_dir):
-		err_msg = "Data not exported, directory doesn't exist"
-	elif file_name == "":
-		err_msg = "Data not exported, no filename specified"
-	elif not true in values:
-		err_msg = "Data not exported, no values selected to export"
-	if err_msg != "":
-		push_warning(err_msg)
-		$AcceptDialog.set_text(err_msg)
-		$AcceptDialog.popup_centered(Vector2(200, 100))
-		return
-	
-	# Get the indexes of the values to save
-	var indexes_to_save = []
-	var search_start = 0
-	for _i in range(len(values)):
-		var idx = values.find(true, search_start)
-		if idx != -1:
-			indexes_to_save.append(idx)
-			search_start = idx + 1
-		else:
-			break
-	
-	var export_data = []
-	for entry in _old_data:
-		var extracted = []
-		for idx in indexes_to_save:
-			extracted.append(entry[idx])
-		export_data.append(extracted)
-	
-	var file = _open_file(path_dir + "/" + file_name, File.WRITE)
-	if file != null:
-		var data_string = ""
-		for entry in export_data:
-			var line = ""
-			for data in entry:
-				line += data + ","
-			line = line.trim_suffix(",")
-			data_string += line + "\n"
-		file.store_string(data_string)
-		file.close()
-	var msg = "Data exported to: " + filepath
-	$AcceptDialog.set_text(msg)
-	$AcceptDialog.popup_centered(Vector2(200, 100))
-
-func _read_JSON_data() -> Array:
-	""" 
-	Returns the data from the JSON save file provided it is an array otherwise 
-	returns an empty array
-	"""
-	var json_file = _open_file(save_location, File.READ)
-	if json_file == null:
-		return []
-	else:
-		var text = json_file.get_as_text()
-		var data
-		if text != "":
-			data = parse_json(text)
-		json_file.close()
-		if typeof(data) != TYPE_ARRAY:
-			data = []
-		return data
-
-func _open_file(filepath: String, mode: int) -> File:
-	"""
-	Returns the openend file or throws an error and displays a popup if it 
-	failed
-	"""
-	var file = File.new()
-	# The file is not created automatically if the mode == READ 
-	# or mode == READ_WRITE, so create it in case the mode is one of those
-	if not file.file_exists(filepath):
-		file.open(filepath, File.WRITE)
-		file.close()
-	var err = file.open(filepath, mode)
-	if err == OK:
-		return file
-	else:
-		var msg = "Error opening the file"
-		$AcceptDialog.set_text(msg)
-		$AcceptDialog.popup_centered(Vector2(200, 100))
-		push_error(msg)
-		return null

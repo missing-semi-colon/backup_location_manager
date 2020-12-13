@@ -4,6 +4,8 @@ signal export_set
 
 onready var _close_button = (
 	$CenterContainer/VBoxContainer/HBoxContainer/CloseButton )
+onready var _selected_groups = (
+	$CenterContainer/VBoxContainer/HBoxContainer/GroupMenuButton )
 onready var _selected_values_parent = (
 	$CenterContainer/VBoxContainer/ValuesHBoxContainer )
 onready var _destination_line_edit = (
@@ -13,7 +15,7 @@ onready var _destination_button = (
 onready var _export_button = $CenterContainer/VBoxContainer/ExportButton
 
 
-func _ready():
+func _ready() -> void:
 	_close_button.connect("pressed", self, "on_CloseButton_pressed")
 	_export_button.connect("pressed", self, "on_ExportButton_pressed")
 	_destination_button.connect(
@@ -21,10 +23,14 @@ func _ready():
 	$DestinationFileDialog.connect(
 		"file_selected", self, "on_DestinationFileDialogue_file_selected" )
 
+func set_groups(groups: Array) -> void:
+	_selected_groups.set_groups(groups)
+
 func on_ExportButton_pressed() -> void:
 	var path = _destination_line_edit.get_text()
-	var selected = _get_selected_values()
-	emit_signal("export_set", path, selected)
+	var value_types = _get_selected_values()
+	var groups = _selected_groups.get_selected()
+	emit_signal("export_set", path, groups, value_types)
 	hide()
 
 func on_DestinationButton_pressed() -> void:
