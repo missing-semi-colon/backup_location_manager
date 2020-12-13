@@ -106,11 +106,19 @@ func _delete_group(group_title: String) -> void:
 	IO.delete_group(save_location, group_title)
 	$VBoxContainer/HBoxContainer/DeleteGroupButton.set_pressed(false)
 	mod_group_cont.set_visible(false)
+	
+	if $ConfirmationDialog.get_cancel().is_connected(
+			"pressed", self, "_cancel_deletion" ):
+		$ConfirmationDialog.get_cancel().disconnect(
+			"pressed", self, "_cancel_deletion")
 
 func _cancel_deletion() -> void:
 	mod_group_cont.get_node("HBoxContainer/GroupTitleLineEdit").clear()
 	$VBoxContainer/HBoxContainer/DeleteGroupButton.set_pressed(false)
 	mod_group_cont.set_visible(false)
+	
+	if $ConfirmationDialog.is_connected("confirmed", self, "_delete_group"):
+		$ConfirmationDialog.disconnect("confirmed", self, "_delete_group")
 
 func _get_list_view_node(group_title: String) -> ListView:
 	for node in $VBoxContainer/TabContainer.get_children():
