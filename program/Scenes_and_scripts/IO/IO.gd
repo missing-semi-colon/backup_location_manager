@@ -1,7 +1,6 @@
 extends Node
 
-onready var accept_dialog = (
-	get_tree().get_root().get_node("Main").get_node("AcceptDialog") )
+onready var accept_dialog = $CanvasLayer/AcceptDialog
 
 
 func group_exists(filepath: String, group_title: String) -> bool:
@@ -61,12 +60,16 @@ func export_data(from: String, to: String, groups: Array, values: Array) -> void
 	var file_name = to.get_file()
 	
 	var err_msg = ""
-	if not dir.dir_exists(path_dir):
+	if len(groups) == 0:
+		err_msg = "Data not exported, no groups selected"
+	elif not _validate_groups(from, groups):
+		err_msg = "Data not exported, invalid group selection"
+	elif not true in values:
+		err_msg = "Data not exported, no values selected to export"
+	elif not dir.dir_exists(path_dir):
 		err_msg = "Data not exported, directory doesn't exist"
 	elif file_name == "":
 		err_msg = "Data not exported, no filename specified"
-	elif not true in values:
-		err_msg = "Data not exported, no values selected to export"
 	if err_msg != "":
 		push_warning(err_msg)
 		accept_dialog.set_text(err_msg)
@@ -89,15 +92,8 @@ func export_data(from: String, to: String, groups: Array, values: Array) -> void
 	# "notes" are actually put in the array
 	var data_to_export = []
 	for group in groups:
-		# Stores the chosen `values` for the current `group`
-		var group_extracted = []
-		for entry in get_group_data(from, group):
-			# Stores the data types chosen from `values`, from `entry`
-			var extracted = []
-			for idx in indexes_to_save:
-				extracted.append(entry[idx])
-			group_extracted.append(extracted)
-		data_to_export.append(group_extracted)
+		data_to_export.append(
+			_extract_entry_values_for_group(from, group, indexes_to_save) )
 	
 	var file = _open_file(path_dir + "/" + file_name, File.WRITE)
 	if file != null:
@@ -161,3 +157,38 @@ func _save_JSON_data(filepath: String, data: Dictionary) -> void:
 	if json_file != null:
 		json_file.store_string(to_json(data))
 		json_file.close()
+
+func _validate_groups(filepath: String, groups: Array) -> bool:
+	var groups_are_valid = true
+	var valid_groups = get_group_list(filepath)
+	for group in groups:
+		if not (group in valid_groups):
+			groups_are_valid = false
+			break
+	return groups_are_valid
+
+func _extract_entry_values_for_group(
+		filepath: String, group: String, value_positions: Array ) -> Array:
+	"""
+	Args:
+		filepath: path to the JSON file with the data
+		group: name of the group
+		value_positions: indexes of the values to get from each entry
+			example - [0, 2] would only get the values at indexes 0 and 2
+	
+	Returns:
+		An array for each entry in the given group, but each entry only 
+		contains the values at the positions specified by `value_positions`
+	"""
+	# Stores the chosen `values` for the current `group`
+	var group_extracted = []
+	for entry in get_group_data(filepath, group):
+		# Stores the data types chosen from `values`, from `entry`
+		var entry_extracted = []
+		for idx in value_positions:
+			if len(entry) > idx:
+				entry_extracted.append(entry[idx])
+			else:
+				entry_extracted.append("")
+		group_extracted.append(entry_extracted)
+	return group_extracted
