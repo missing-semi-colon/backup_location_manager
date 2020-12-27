@@ -85,18 +85,26 @@ func _create_tab(group_title: String) -> void:
 	tab_cont.add_child(lv)
 	tab_cont.set_tab_title(tab_cont.get_tab_count() - 1, group_title)
 
+func _get_tab_titles() -> PoolStringArray:
+	var titles = PoolStringArray()
+	var tab_cont = $VBoxContainer/TabContainer
+	for count in range(tab_cont.get_tab_count()):
+		titles.append(tab_cont.get_tab_title(count))
+	return titles
+
 func _add_group(group_title: String) -> void:
 	""" Validates the title of the new group then adds a tab for it """
 	var err_msg = ""
 	if group_title == "":
 		err_msg = "Group name must not be empty"
-	elif group_title in IO.get_group_list(save_location):
+	elif group_title in _get_tab_titles():
 		err_msg = "Group with that name already exists"
 	if err_msg != "":
 		$AcceptDialog.set_text(err_msg)
 		$AcceptDialog.popup_centered(Vector2(200, 100))
 	else:
 		_create_tab(group_title)
+	mod_group_cont.get_node("HBoxContainer/GroupTitleLineEdit").set_text("")
 	$VBoxContainer/HBoxContainer/NewGroupButton.set_pressed(false)
 	mod_group_cont.set_visible(false)
 
@@ -106,6 +114,7 @@ func _delete_group(group_title: String) -> void:
 	if group_node:
 		group_node.queue_free()
 	IO.delete_group(save_location, group_title)
+	mod_group_cont.get_node("HBoxContainer/GroupTitleLineEdit").set_text("")
 	$VBoxContainer/HBoxContainer/DeleteGroupButton.set_pressed(false)
 	mod_group_cont.set_visible(false)
 	
