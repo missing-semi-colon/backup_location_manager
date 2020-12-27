@@ -168,6 +168,7 @@ func _remove_all_entries() -> void:
 func _import_data(data: Array) -> void:
 	_remove_all_entries()
 	_add_entries(data)
+	_scroll_to(0)
 
 func _get_entry_data() -> Array:
 	""" Returns an array containing [path, name, notes] for each entry """
