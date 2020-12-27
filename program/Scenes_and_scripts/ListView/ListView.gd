@@ -141,9 +141,8 @@ func on_SaveButton_pressed() -> void:
 	save_entries()
 
 func on_CancelButton_pressed() -> void:
-	var current_scroll = _scroll_container.get_v_scroll()
 	disable_edits()
-	_revert_changes(current_scroll)
+	_revert_changes()
 
 func on_ImportButton_pressed() -> void:
 	$ImportFileDialog.show()
@@ -180,10 +179,11 @@ func _get_entry_data() -> Array:
 		data.append([path, title, notes])
 	return data
 
-func _revert_changes(current_scroll_pos: int=0) -> void:
+func _revert_changes() -> void:
 	""" 
 	Returns all entries to their state before the edit button was pressed
 	"""
+	var current_scroll_pos = _scroll_container.get_v_scroll()
 	_remove_all_entries()
 	_add_entries(_old_data)
 	_scroll_to(current_scroll_pos)
