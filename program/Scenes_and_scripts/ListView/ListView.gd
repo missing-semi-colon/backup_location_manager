@@ -60,9 +60,7 @@ func _ready() -> void:
 	if IO.group_exists(save_location, group_title):
 		_old_data = IO.get_group_data(save_location, group_title)
 		_add_entries(_old_data)
-	# Don't use _scroll_to() here as need the yield() in this method
-	yield(get_tree(), "idle_frame")
-	_scroll_container.set_v_scroll(0)
+	_scroll_to(0)
 
 func enable_edits() -> void:
 	""" Enables the ability to edit entries """
@@ -143,8 +141,9 @@ func on_SaveButton_pressed() -> void:
 	save_entries()
 
 func on_CancelButton_pressed() -> void:
+	var current_scroll = _scroll_container.get_v_scroll()
 	disable_edits()
-	_revert_changes()
+	_revert_changes(current_scroll)
 
 func on_ImportButton_pressed() -> void:
 	$ImportFileDialog.show()
@@ -180,12 +179,13 @@ func _get_entry_data() -> Array:
 		data.append([path, title, notes])
 	return data
 
-func _revert_changes() -> void:
+func _revert_changes(current_scroll_pos: int=0) -> void:
 	""" 
 	Returns all entries to their state before the edit button was pressed
 	"""
 	_remove_all_entries()
 	_add_entries(_old_data)
+	_scroll_to(current_scroll_pos)
 
 func _get_sort_input() -> Array:
 	""" Returns the sorting options selected by the user """
@@ -233,8 +233,11 @@ func _sort(option, ascending=true) -> void:
 		for i in range(len(nodes)-1, -1, -1):
 			_entry_parent_node.add_child(nodes[i])
 
-func _scroll_to_end() -> void:
+func _scroll_to(pos: int) -> void:
 	""" Scrolls the scroll container to the given position """
 	yield(get_tree(), "idle_frame")
-	_scroll_container.set_v_scroll(
-		_scroll_container.get_v_scrollbar().get_max() )
+	_scroll_container.set_v_scroll(pos)
+
+func _scroll_to_end() -> void:
+	""" Scrolls the scroll container to the end """
+	_scroll_to(_scroll_container.get_v_scrollbar().get_max())
