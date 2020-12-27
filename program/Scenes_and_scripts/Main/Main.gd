@@ -9,6 +9,9 @@ var graphical = true
 
 
 func _ready():
+	if IO._open_file(save_location, File.READ).get_as_text() == "":
+		IO.initialise_save_file(save_location)
+	
 	var args = Array(OS.get_cmdline_args())
 	if len(args) == 0:
 		graphical = true

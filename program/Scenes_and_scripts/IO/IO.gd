@@ -3,6 +3,10 @@ extends Node
 onready var accept_dialog = $CanvasLayer/AcceptDialog
 
 
+func initialise_save_file(filepath: String) -> void:
+	""" Makes the JSON file ready to be used """
+	_save_JSON_data(filepath, {})
+
 func group_exists(filepath: String, group_title: String) -> bool:
 	return _read_JSON_data(filepath).has(group_title)
 
@@ -159,6 +163,7 @@ func _save_JSON_data(filepath: String, data: Dictionary) -> void:
 		json_file.close()
 
 func _validate_groups(filepath: String, groups: Array) -> bool:
+	""" Checks the given groups exist in the save file """
 	var groups_are_valid = true
 	var valid_groups = get_group_list(filepath)
 	for group in groups:
@@ -192,3 +197,4 @@ func _extract_entry_values_for_group(
 				entry_extracted.append("")
 		group_extracted.append(entry_extracted)
 	return group_extracted
+
