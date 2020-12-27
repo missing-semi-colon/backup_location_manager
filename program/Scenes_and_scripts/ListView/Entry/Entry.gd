@@ -7,7 +7,7 @@ onready var notes_text_edit = $HSplitContainer/NotesTextEdit
 
 
 func _ready() -> void:
-	close_btn.connect("pressed", self, "on_close_button_pressed")
+	pass
 
 func get_path_input() -> String:
 	return path_line_edit.get_text()
