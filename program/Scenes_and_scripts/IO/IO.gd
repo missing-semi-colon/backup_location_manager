@@ -99,7 +99,7 @@ func export_data(from: String, to: String, groups: Array, values: Array) -> void
 	if file != null:
 		var data_string = ""
 		for i in range(len(data_to_export)):
-			data_string += "---- " + groups[i] + " ----\n"
+#			data_string += "---- " + groups[i] + " ----\n"
 			for entry in data_to_export[i]:
 				var line = ""
 				for data in entry:
