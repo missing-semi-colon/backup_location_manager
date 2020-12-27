@@ -3,16 +3,16 @@ extends MarginContainer
 signal export_set
 
 onready var _close_button = (
-	$CenterContainer/VBoxContainer/HBoxContainer/CloseButton )
+	$CenterContainer/PanelContainer/VBoxContainer/HBoxContainer/CloseButton )
 onready var _selected_groups = (
-	$CenterContainer/VBoxContainer/HBoxContainer/GroupMenuButton )
+	$CenterContainer/PanelContainer/VBoxContainer/HBoxContainer/GroupMenuButton )
 onready var _selected_values_parent = (
-	$CenterContainer/VBoxContainer/ValuesHBoxContainer )
+	$CenterContainer/PanelContainer/VBoxContainer/ValuesHBoxContainer )
 onready var _destination_line_edit = (
-	$CenterContainer/VBoxContainer/PathHBoxContainer/DestinationLineEdit )
+	$CenterContainer/PanelContainer/VBoxContainer/PathHBoxContainer/DestinationLineEdit )
 onready var _destination_button = (
-	$CenterContainer/VBoxContainer/PathHBoxContainer/DestinationButton )
-onready var _export_button = $CenterContainer/VBoxContainer/ExportButton
+	$CenterContainer/PanelContainer/VBoxContainer/PathHBoxContainer/DestinationButton )
+onready var _export_button = $CenterContainer/PanelContainer/VBoxContainer/ExportButton
 
 
 func _ready() -> void:

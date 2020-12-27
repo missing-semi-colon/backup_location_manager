@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scenes_and_scripts/ListView/Export/Export.gd" type="Script" id=1]
 [ext_resource path="res://Scenes_and_scripts/ListView/Export/GroupMenuButton.gd" type="Script" id=2]
+[ext_resource path="res://Scenes_and_scripts/ListView/Export/InfoButton.gd" type="Script" id=3]
 
 [node name="Export" type="MarginContainer"]
 anchor_right = 1.0
@@ -24,36 +25,64 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 398.0
-margin_top = 219.0
-margin_right = 606.0
-margin_bottom = 361.0
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+margin_left = 391.0
+margin_top = 212.0
+margin_right = 613.0
+margin_bottom = 368.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 215.0
+margin_bottom = 149.0
 custom_constants/separation = 10
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 margin_right = 208.0
 margin_bottom = 20.0
 custom_constants/separation = 10
 
-[node name="GroupMenuButton" type="MenuButton" parent="CenterContainer/VBoxContainer/HBoxContainer"]
-margin_right = 178.0
+[node name="GroupMenuButton" type="MenuButton" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+margin_right = 150.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Groups to export"
 flat = false
 script = ExtResource( 2 )
 
-[node name="CloseButton" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="InfoButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+margin_left = 160.0
+margin_right = 178.0
+margin_bottom = 20.0
+text = "?"
+script = ExtResource( 3 )
+
+[node name="AcceptDialog" type="AcceptDialog" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainer/InfoButton"]
+margin_left = 82.0
+margin_top = 23.0
+margin_right = 321.0
+margin_bottom = 166.0
+window_title = "Info"
+resizable = true
+dialog_text = "The output will be a CSV file.
+
+Selecting multiple groups to export will concatenate them. To keep them seperate export each group to a different file."
+dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CloseButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 margin_left = 188.0
 margin_right = 208.0
 margin_bottom = 20.0
 text = "X"
 
-[node name="ValuesLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="ValuesLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
 margin_top = 30.0
 margin_right = 208.0
 margin_bottom = 44.0
@@ -61,48 +90,49 @@ size_flags_horizontal = 3
 text = "Values to export"
 align = 1
 
-[node name="ValuesHBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+[node name="ValuesHBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 margin_top = 54.0
 margin_right = 208.0
 margin_bottom = 78.0
 custom_constants/separation = 10
 
-[node name="PathCheckBox" type="CheckBox" parent="CenterContainer/VBoxContainer/ValuesHBoxContainer"]
+[node name="PathCheckBox" type="CheckBox" parent="CenterContainer/PanelContainer/VBoxContainer/ValuesHBoxContainer"]
 margin_right = 56.0
 margin_bottom = 24.0
 text = "Path"
 
-[node name="NameCheckBox2" type="CheckBox" parent="CenterContainer/VBoxContainer/ValuesHBoxContainer"]
+[node name="NameCheckBox2" type="CheckBox" parent="CenterContainer/PanelContainer/VBoxContainer/ValuesHBoxContainer"]
 margin_left = 66.0
 margin_right = 132.0
 margin_bottom = 24.0
 text = "Name"
 
-[node name="NotesCheckBox3" type="CheckBox" parent="CenterContainer/VBoxContainer/ValuesHBoxContainer"]
+[node name="NotesCheckBox3" type="CheckBox" parent="CenterContainer/PanelContainer/VBoxContainer/ValuesHBoxContainer"]
 margin_left = 142.0
 margin_right = 208.0
 margin_bottom = 24.0
 text = "Notes"
 
-[node name="PathHBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+[node name="PathHBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 margin_top = 88.0
 margin_right = 208.0
 margin_bottom = 112.0
 
-[node name="DestinationLineEdit" type="LineEdit" parent="CenterContainer/VBoxContainer/PathHBoxContainer"]
+[node name="DestinationLineEdit" type="LineEdit" parent="CenterContainer/PanelContainer/VBoxContainer/PathHBoxContainer"]
 margin_right = 123.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 editable = false
+placeholder_text = "Filepath"
 caret_blink = true
 
-[node name="DestinationButton" type="Button" parent="CenterContainer/VBoxContainer/PathHBoxContainer"]
+[node name="DestinationButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/PathHBoxContainer"]
 margin_left = 127.0
 margin_right = 208.0
 margin_bottom = 24.0
 text = "Export to..."
 
-[node name="ExportButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ExportButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer"]
 margin_top = 122.0
 margin_right = 208.0
 margin_bottom = 142.0
