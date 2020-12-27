@@ -135,8 +135,8 @@ func _open_file(filepath: String, mode: int) -> File:
 
 func _read_JSON_data(filepath) -> Dictionary:
 	""" 
-	Returns the data from the JSON save file provided it is an array otherwise 
-	returns an empty array
+	Returns the data from the JSON save file provided it is an dicationary 
+	otherwise returns an empty dictionary
 	"""
 	var json_file = _open_file(filepath, File.READ)
 	if json_file == null:
