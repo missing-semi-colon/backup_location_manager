@@ -52,7 +52,7 @@ func on_GroupTitleButton_pressed() -> void:
 			"confirmed", self, "_delete_group", [text], CONNECT_ONESHOT )
 		$ConfirmationDialog.get_cancel().connect(
 			"pressed", self, "_cancel_deletion", [], CONNECT_ONESHOT )
-		$ConfirmationDialog.show()
+		$ConfirmationDialog.popup_centered(Vector2(200, 100))
 
 func on_ExportButton_pressed() -> void:
 	var groups = IO.get_group_list(save_location)
