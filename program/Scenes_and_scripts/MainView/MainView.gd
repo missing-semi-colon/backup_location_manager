@@ -97,13 +97,14 @@ func _add_group(group_title: String) -> void:
 	var err_msg = ""
 	if group_title == "":
 		err_msg = "Group name must not be empty"
-	elif group_title in _get_tab_titles():
+	elif group_title in IO.get_group_list(save_location):
 		err_msg = "Group with that name already exists"
 	if err_msg != "":
 		$AcceptDialog.set_text(err_msg)
 		$AcceptDialog.popup_centered(Vector2(200, 100))
 	else:
 		_create_tab(group_title)
+		IO.save_group_data(save_location, group_title, [])
 	mod_group_cont.get_node("HBoxContainer/GroupTitleLineEdit").set_text("")
 	$VBoxContainer/HBoxContainer/NewGroupButton.set_pressed(false)
 	mod_group_cont.set_visible(false)
