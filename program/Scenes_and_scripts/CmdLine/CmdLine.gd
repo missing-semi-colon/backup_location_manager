@@ -1,14 +1,25 @@
 extends Node
 
-"""
-OPTIONS
-(--export-groups | -g) DEST PATH NAME NOTES GROUP1 [GROUP2, GROUP3, ...]
-	DEST is the filepath to write to, either an absolute path or relative to 
-		the executable
-	PATH, NAME, NOTES take values of 0 or 1, where 1 indicates to export those 
-	values and 0 to not export them
-	GROUP1, GROUP2, ... are the names of the groups to export
-"""
+# OPTIONS = [[[switches], parameters, description, parameter details], ...]
+const OPTIONS = [
+	[
+		["-?"],
+		"", 
+		"shows the help list", 
+		""
+	],
+	[
+		["-g", "--export-groups"],
+		"DEST PATH NAME NOTES GROUP1 [GROUP2, GROUP3, ...]" \
+		+ "    exports the data in CSV format", 
+		"", 
+		"DEST is the filepath to write to, either an absolute path or relative" \
+			+ " to the executable" \
+		+ "\nPATH, NAME, NOTES take values of 0 or 1, where 1 indicates to" \
+			+ " export those values and 0 to not export them" \
+		+ "\nGROUP1, GROUP2, ... are the names of the groups to export"
+	]
+]
 
 var save_location = "./paths.json"
 const VALUES_PER_ENTRY = 3
@@ -41,6 +52,9 @@ func parse_args(args: Array) -> Dictionary:
 	return parsed
 
 func execute_args(args: Dictionary) -> void:
+	if "-?" in args.keys():
+		_show_help(args)
+		return
 	for switch in args.keys():
 		if switch == "--export-groups" or switch == "-g":
 			_export(args[switch])
@@ -85,3 +99,34 @@ func _export(params: Array) -> void:
 		groups.append(params[i])
 	
 	IO.export_data(save_location, abs_dest, groups, values)
+
+func _show_help(args: Dictionary) -> void:
+	"""
+	Prints the list of possible arguments specified in `OPTIONS`. If the first 
+	argument in `args` is not the help switch (-?) prints more detailed 
+	information about the first argument.
+	"""
+	var first_arg = args.keys()[0]
+	if first_arg != "-?":
+		var arg_help = _find_arg_help(first_arg)
+		if arg_help.size() > 0:
+			var out = str(arg_help[0]).substr(1, len(str(arg_help[0])) - 2)
+			out += " " + arg_help[1]
+			out += "    " + arg_help[2] + "\n"
+			out += arg_help[3]
+			print(out)
+			return
+	for option in OPTIONS:
+		var out = str(option[0]).substr(1, len(str(option[0])) - 2)
+		out += " " + option[1]
+		out += "    " + option[2]
+		print(out)
+
+func _find_arg_help(arg: String) -> Array:
+	"""
+	Returns the array from `OPTIONS` related to `arg`.
+	"""
+	for option in OPTIONS:
+		if arg in option[0]:
+			return option
+	return []
