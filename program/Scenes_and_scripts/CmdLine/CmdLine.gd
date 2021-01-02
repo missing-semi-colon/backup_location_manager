@@ -58,6 +58,8 @@ func execute_args(args: Dictionary) -> void:
 	for switch in args.keys():
 		if switch == "--export-groups" or switch == "-g":
 			_export(args[switch])
+		elif switch == "--get-groups" or switch == "-r":
+			print(PoolStringArray(IO.get_group_list(save_location)).join(","))
 
 func _export(params: Array) -> void:
 	# At least 5 parameters are required
