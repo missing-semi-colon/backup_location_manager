@@ -24,5 +24,6 @@ func _ready():
 		cmd_line.init(save_location)
 		var parsed = cmd_line.parse_args(args)
 		cmd_line.execute_args(parsed)
+		cmd_line.queue_free()
 		yield(get_tree(), "idle_frame")
 		get_tree().quit()
