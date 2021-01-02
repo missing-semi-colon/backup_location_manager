@@ -3,17 +3,15 @@ extends Node
 """
 OPTIONS
 (--export-groups | -g) DEST PATH NAME NOTES GROUP1 [GROUP2, GROUP3, ...]
-	DEST is the filepath to write to
+	DEST is the filepath to write to, either an absolute path or relative to 
+		the executable
 	PATH, NAME, NOTES take values of 0 or 1, where 1 indicates to export those 
 	values and 0 to not export them
 	GROUP1, GROUP2, ... are the names of the groups to export
 """
 
-
-
 var save_location = "./paths.json"
 const VALUES_PER_ENTRY = 3
-#var switches_to_funcs = {["--export-groups", "-g"]: funcref(self, "")}
 
 
 func init(sv_location: String) -> void:
@@ -56,7 +54,10 @@ func _export(params: Array) -> void:
 	
 	var dest = params[0]
 	var dest_dir = dest.get_base_dir()
+	if dest_dir[0] == ".":
+		dest_dir[0] = OS.get_executable_path().get_base_dir()
 	var dest_filename = dest.get_file()
+	var abs_dest = dest_dir + "/" + dest_filename
 	var dir = Directory.new()
 	if not dir.dir_exists(dest_dir):
 		var err_msg = "Directory doesn't exist"
@@ -67,6 +68,7 @@ func _export(params: Array) -> void:
 		push_error(err_msg)
 		return
 	
+	# Get which of: paths, names or notes, for each entry to export
 	var values = []
 	for count in range(1, VALUES_PER_ENTRY + 1):
 		if params[count] == "1":
@@ -82,4 +84,4 @@ func _export(params: Array) -> void:
 	for i in range(4, len(params)):
 		groups.append(params[i])
 	
-	IO.export_data(save_location, dest, groups, values)
+	IO.export_data(save_location, abs_dest, groups, values)
