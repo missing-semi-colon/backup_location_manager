@@ -17,6 +17,9 @@ func get_group_data(filepath: String, group_title: String) -> Array:
 	return _read_JSON_data(filepath)[group_title]
 
 func save_group_data(filepath: String, group_title: String, data: Array) -> void:
+	if "," in group_title:
+		push_error("Commas aren't permitted in the group name")
+		return
 	var json_file = _open_file(filepath, File.READ)
 	if json_file != null:
 		var json_data = parse_json(json_file.get_as_text())

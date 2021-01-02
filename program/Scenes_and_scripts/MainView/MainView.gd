@@ -99,6 +99,8 @@ func _add_group(group_title: String) -> void:
 		err_msg = "Group name must not be empty"
 	elif group_title in IO.get_group_list(save_location):
 		err_msg = "Group with that name already exists"
+	elif "," in group_title:
+		err_msg = "You can't have commas in the name"
 	if err_msg != "":
 		$AcceptDialog.set_text(err_msg)
 		$AcceptDialog.popup_centered(Vector2(200, 100))
