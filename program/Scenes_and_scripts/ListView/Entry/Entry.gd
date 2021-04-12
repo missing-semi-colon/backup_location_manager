@@ -7,7 +7,12 @@ onready var notes_text_edit = $HSplitContainer/NotesTextEdit
 
 
 func _ready() -> void:
-	pass
+	$HSplitContainer/VBoxContainer/PathLineEdit.connect(
+		"gui_input", self, "on_PathLineEdit_gui_input" )
+	$HSplitContainer/VBoxContainer/NameLineEdit.connect(
+		"gui_input", self, "on_NameLineEdit_gui_input" )
+	$HSplitContainer/NotesTextEdit.connect(
+		"gui_input", self, "on_NotesTextEdit_gui_input" )
 
 func get_path_input() -> String:
 	return path_line_edit.get_text()
@@ -41,3 +46,30 @@ func set_disabled(val: bool) -> void:
 	get_name_node().set_editable(not val)
 	get_notes_node().set_readonly(val)
 	close_btn.set_disabled(val)
+
+func on_PathLineEdit_gui_input(event) -> void:
+	"""
+	Copy PathLineEdit content to clipboard if it is pressed and in read only 
+	mode.
+	"""
+	if event is InputEventMouseButton and event.is_pressed():
+		if not get_path_node().is_editable():
+			OS.set_clipboard(get_path_input())
+
+func on_NameLineEdit_gui_input(event) -> void:
+	"""
+	Copy NameLineEdit content to clipboard if it is pressed and in read only 
+	mode.
+	"""
+	if event is InputEventMouseButton and event.is_pressed():
+		if not get_name_node().is_editable():
+			OS.set_clipboard(get_name_input())
+
+func on_NotesTextEdit_gui_input(event) -> void:
+	"""
+	Copy NotesTextEdit content to clipboard if it is pressed and in read only 
+	mode.
+	"""
+	if event is InputEventMouseButton and event.is_pressed():
+		if get_notes_node().is_readonly():
+			OS.set_clipboard(get_notes_input())
