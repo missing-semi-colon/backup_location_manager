@@ -47,29 +47,54 @@ func set_disabled(val: bool) -> void:
 	get_notes_node().set_readonly(val)
 	close_btn.set_disabled(val)
 
-func on_PathLineEdit_gui_input(event) -> void:
+func on_PathLineEdit_gui_input(event: InputEvent) -> void:
 	"""
 	Copy PathLineEdit content to clipboard if it is pressed and in read only 
 	mode.
 	"""
-	if event is InputEventMouseButton and event.is_pressed():
+	if (event is InputEventMouseButton 
+			and event.get_button_index() == BUTTON_LEFT 
+			and event.is_pressed() ):
 		if not get_path_node().is_editable():
 			OS.set_clipboard(get_path_input())
+			_flash(get_path_node())
 
-func on_NameLineEdit_gui_input(event) -> void:
+func on_NameLineEdit_gui_input(event: InputEvent) -> void:
 	"""
 	Copy NameLineEdit content to clipboard if it is pressed and in read only 
 	mode.
 	"""
-	if event is InputEventMouseButton and event.is_pressed():
+	if (event is InputEventMouseButton 
+			and event.get_button_index() == BUTTON_LEFT 
+			and event.is_pressed() ):
 		if not get_name_node().is_editable():
 			OS.set_clipboard(get_name_input())
+			_flash(get_name_node())
 
-func on_NotesTextEdit_gui_input(event) -> void:
+func on_NotesTextEdit_gui_input(event: InputEvent) -> void:
 	"""
 	Copy NotesTextEdit content to clipboard if it is pressed and in read only 
 	mode.
 	"""
-	if event is InputEventMouseButton and event.is_pressed():
+	if (event is InputEventMouseButton 
+			and event.get_button_index() == BUTTON_LEFT 
+			and event.is_pressed() ):
 		if get_notes_node().is_readonly():
 			OS.set_clipboard(get_notes_input())
+			_flash(get_notes_node())
+
+func _flash(item: CanvasItem) -> void:
+	""" Makes `item` flash """
+	var fade_time = 0.05
+	var fade_step_count = 10
+	var flash_count = 2
+	
+	for _count in range(flash_count):
+		for count in range(fade_step_count):
+			item.modulate.a -= 1.0 / fade_step_count
+			yield(get_tree().create_timer(fade_time / fade_step_count), "timeout")
+		for count in range(fade_step_count):
+			item.modulate.a += 1.0 / fade_step_count
+			yield(get_tree().create_timer(fade_time / fade_step_count), "timeout")
+	# Make sure item is visible, incase of bug above
+	item.modulate.a = 1.0
