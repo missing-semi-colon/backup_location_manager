@@ -70,8 +70,8 @@ func _export(params: Array) -> void:
 	
 	var dest = params[0]
 	var dest_dir = dest.get_base_dir()
-	if dest_dir[0] == ".":
-		dest_dir[0] = OS.get_executable_path().get_base_dir()
+	if len(dest_dir) == 0 or dest_dir[0] == ".":
+		dest_dir = OS.get_executable_path().get_base_dir() + dest_dir.lstrip(".")
 	var dest_filename = dest.get_file()
 	var abs_dest = dest_dir + "/" + dest_filename
 	var dir = Directory.new()
